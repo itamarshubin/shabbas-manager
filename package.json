@@ -4,7 +4,8 @@
   "description": "",
   "main": "src/app.ts",
   "scripts": {
-    "start": "node ./dist/app.js"
+    "dev": "nodemon",
+    "start:prod": "tsc && node ./dist/app.js"
   },
   "keywords": [],
   "author": "",

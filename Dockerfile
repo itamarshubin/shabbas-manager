@@ -3,7 +3,7 @@ FROM node:18
 WORKDIR /app
 
 COPY package.json package.json
-COPY dist dist
+COPY src src
 RUN npm install
 RUN apt-get update \
     && apt-get install -y \
