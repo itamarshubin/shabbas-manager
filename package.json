@@ -4,12 +4,13 @@
   "description": "",
   "main": "src/app.ts",
   "scripts": {
-    "start":"node ./dist/app.js"
+    "start": "node ./dist/app.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "dotenv": "^16.3.1",
     "firebase": "^9.23.0",
     "qrcode-terminal": "^0.12.0",
     "whatsapp-web.js": "^1.21.0"

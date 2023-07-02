@@ -166,7 +166,7 @@ export const calculateFood = async (msg: Message) => {
   for (const [key, value] of Object.entries(help)) {
     finalMsg += `*${key}*\n`;
     value.forEach((user) => {
-      const foodForUser = user.married ? user.childrens + 1 : 1;
+      const foodForUser = user.married ? user.childrens + 2 : 1;
       totalFood += foodForUser;
       finalMsg += `${user.name} - ${foodForUser}\n`;
     });
