@@ -50,4 +50,4 @@ RUN apt-get update \
     && wget https://github.com/andmarios/duphard/releases/download/v1.0/duphard -O /bin/duphard \
     && chmod +x /bin/duphard
 
-ENTRYPOINT ["node", "./dist/app.js"]
+ENTRYPOINT ["npm", "run","start:prod"]
