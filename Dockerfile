@@ -4,6 +4,7 @@ WORKDIR /app
 
 COPY package.json package.json
 COPY src src
+COPY tsconfig.json tsconfig.json
 RUN npm install
 RUN apt-get update \
     && apt-get install -y \
