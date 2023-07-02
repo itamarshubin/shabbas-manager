@@ -31,6 +31,8 @@ client.on("ready", async () => {
 });
 
 client.on("qr", (qr) => {
+  console.log("qr", qr);
+
   qrcode.generate(qr, { small: true });
 });
 
