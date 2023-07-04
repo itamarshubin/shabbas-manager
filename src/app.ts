@@ -28,6 +28,7 @@ client.initialize();
 
 client.on("ready", async () => {
   console.log("ready");
+  client.sendMessage("972512665020@c.us", "ready");
 });
 
 client.on("qr", (qr) => {
