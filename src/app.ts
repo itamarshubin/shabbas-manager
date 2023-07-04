@@ -10,8 +10,10 @@ const firebaseConfig = {
   measurementId: process.env.MESUREMENT_ID,
 };
 
+console.log("start initializing firebase");
 // Initialize Firebase
 initializeApp(firebaseConfig);
+console.log("done initializing firebase");
 
 import { Client, LocalAuth } from "whatsapp-web.js";
 import { messageHandler } from "./message-handler";
@@ -24,7 +26,9 @@ export const client = new Client({
   },
 });
 
+console.log("start initializing whatsapp client");
 client.initialize();
+console.log("done initializing whatsapp client");
 
 client.on("ready", async () => {
   console.log("ready");
