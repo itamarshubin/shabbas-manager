@@ -9,6 +9,12 @@ const firebaseConfig = {
   appId: process.env.APP_ID,
   measurementId: process.env.MESUREMENT_ID,
 };
+
+console.log("start initializing firebase");
+// Initialize Firebase
+initializeApp(firebaseConfig);
+console.log("done initializing firebase");
+
 import { Client, LocalAuth } from "whatsapp-web.js";
 import { messageHandler } from "./message-handler";
 import qrcode from "qrcode-terminal";
@@ -20,16 +26,8 @@ export const client = new Client({
   },
 });
 
-(async()=>{
-
-// Initialize Firebase
-initializeApp(firebaseConfig);
-console.log("done initializing firebase");
-
-
-
 console.log("start initializing whatsapp client");
-await client.initialize();
+client.initialize();
 console.log("done initializing whatsapp client");
 
 client.on("ready", async () => {
@@ -44,4 +42,3 @@ client.on("qr", (qr) => {
 });
 
 client.on("message", messageHandler);
-})()
