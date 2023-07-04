@@ -81,6 +81,10 @@ export const getParticipants = async (msg: Message) => {
 
   const participant: DocumentReference<DocumentData>[] =
     shabbas.data().participants;
+  if (!participant) {
+    client.sendMessage(msg.from, "אף אחד עוד לא נרשם לשבת");
+    return;
+  }
   const participantsData = await Promise.all(
     participant.map(async (participantRef) =>
       (await getDocFromServer(participantRef)).data()
@@ -141,6 +145,10 @@ export const calculateFood = async (msg: Message) => {
 
   const participant: DocumentReference<DocumentData>[] =
     shabbas.data().participants;
+  if (!participant) {
+    client.sendMessage(msg.from, "אף אחד עוד לא נרשם לשבת");
+    return;
+  }
   const participantsData = await Promise.all(
     participant.map(async (participantRef) =>
       (await getDocFromServer(participantRef)).data()
