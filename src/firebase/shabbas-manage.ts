@@ -82,7 +82,7 @@ export const getParticipants = async (msg: Message) => {
   const participant: DocumentReference<DocumentData>[] =
     shabbas.data().participants;
   const participantsData = await Promise.all(
-    participant.map(async (participantRef) =>
+    participant?.map(async (participantRef) =>
       (await getDocFromServer(participantRef)).data()
     )
   );
@@ -142,7 +142,7 @@ export const calculateFood = async (msg: Message) => {
   const participant: DocumentReference<DocumentData>[] =
     shabbas.data().participants;
   const participantsData = await Promise.all(
-    participant.map(async (participantRef) =>
+    participant?.map(async (participantRef) =>
       (await getDocFromServer(participantRef)).data()
     )
   );
