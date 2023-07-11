@@ -23,7 +23,7 @@ import { client } from "../app";
 
 const fireStore = getFirestore();
 
-function sumOfAscii(str: string):any {
+function sumOfAscii(str: string): any {
   let sum = 0;
   for (let i = 0; i < str.length; i++) {
     sum += str.charCodeAt(i);
@@ -111,7 +111,8 @@ export const getParticipants = async (msg: Message) => {
   let finalMsg = "";
 
   for (const [key, value] of Object.entries(help).sort(
-    (a:string, b:string) => sumOfAscii(a) - sumOfAscii(b)
+    //@ts-ignore
+    (a: string, b: string) => sumOfAscii(a) - sumOfAscii(b)
   )) {
     finalMsg += `*${key}*\n`;
     value.forEach((year) => (finalMsg += `${year}\n`));
@@ -182,7 +183,8 @@ export const calculateFood = async (msg: Message) => {
 
   let totalFood = 0;
   for (const [key, value] of Object.entries(help).sort(
-    (a:string, b:string) => sumOfAscii(a) - sumOfAscii(b)
+    //@ts-ignore
+    (a: string, b: string) => sumOfAscii(a) - sumOfAscii(b)
   )) {
     finalMsg += `*${key}*\n`;
     value.forEach((user) => {
