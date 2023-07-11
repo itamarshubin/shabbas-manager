@@ -111,7 +111,7 @@ export const getParticipants = async (msg: Message) => {
   let finalMsg = "";
 
   for (const [key, value] of Object.entries(help).sort(
-    (a, b) => sumOfAscii(a) - sumOfAscii(b)
+    (a:string, b:string) => sumOfAscii(a) - sumOfAscii(b)
   )) {
     finalMsg += `*${key}*\n`;
     value.forEach((year) => (finalMsg += `${year}\n`));
@@ -182,7 +182,7 @@ export const calculateFood = async (msg: Message) => {
 
   let totalFood = 0;
   for (const [key, value] of Object.entries(help).sort(
-    (a, b) => sumOfAscii(a) - sumOfAscii(b)
+    (a:string, b:string) => sumOfAscii(a) - sumOfAscii(b)
   )) {
     finalMsg += `*${key}*\n`;
     value.forEach((user) => {
