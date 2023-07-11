@@ -23,7 +23,7 @@ import { client } from "../app";
 
 const fireStore = getFirestore();
 
-function sumOfAscii(str: string) {
+function sumOfAscii(str: string):any {
   let sum = 0;
   for (let i = 0; i < str.length; i++) {
     sum += str.charCodeAt(i);
