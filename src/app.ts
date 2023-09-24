@@ -1,5 +1,7 @@
 import { initializeApp } from "firebase/app";
 require("dotenv").config();
+
+if (!process.env.API_KEY) throw "you need to set env first";
 const firebaseConfig = {
   apiKey: process.env.API_KEY,
   authDomain: process.env.AUTH_DOMAIN,

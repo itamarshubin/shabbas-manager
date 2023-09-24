@@ -23,8 +23,6 @@ import { client } from "../app";
 
 const fireStore = getFirestore();
 
-
-
 const getShabbasDoc = async (): Promise<
   QueryDocumentSnapshot<DocumentData>
 > => {
@@ -183,4 +181,12 @@ export const calculateFood = async (msg: Message) => {
   }
   finalMsg += `סה"כ מנות: ${totalFood}`;
   client.sendMessage(msg.from, finalMsg);
+};
+
+export const setRabbi = async (msg: Message) => {
+  const shabbas = await getShabbasDoc();
+
+  await updateDoc(shabbas.ref, {
+    rabbi: msg.body.substr(msg.body.indexOf(" ") + 1),
+  });
 };
