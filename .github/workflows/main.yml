@@ -8,13 +8,17 @@ on:
 
 jobs:
   build:
-    runs-on: self-hosted
-
+    runs-on: ubuntu-latest
+    
     steps:
     - uses: actions/checkout@v2
-    - name: Use Node.js 20.x
-      uses: actions/setup-node@v2
+  
+    - name: Deploy to Staging
+      uses: Techie-Pi/node-vps-deployment@main
       with:
-        node-version: 20.x
-    - run: cd /home/ubuntu/shabbas-manager && git pull
-    - run: pm2 restart shabbas
+        remote-path: "~/shabbas-manager"
+        host: ${{ secrets.HOST }}
+        username: "ubuntu"
+        port: 22
+        password: ${{ secrets.PASSWORD }}
+        pm2-id: "shabbas"
