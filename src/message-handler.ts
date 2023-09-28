@@ -13,7 +13,7 @@ import {
 
 export const messageHandler = async (msg: Message) => {
   if (msg.from === "972587943119@c.us") {
-    client.sendMessage("972587943119@c.us", "חחיך");
+    client.sendMessage("972587943119@c.us", "חתיךךך");
   }
     if (msg.from === "972529060306@c.us") {
     client.sendMessage("972529060306@c.us", "אבוששש❤️❤️❤️❤️❤️");
