@@ -16,5 +16,4 @@ jobs:
       uses: actions/setup-node@v2
       with:
         node-version: 20.x
-    - run: npm install
-    - run: pm2 restart shabbas-manager
+    - run: pm2 restart shabbas
