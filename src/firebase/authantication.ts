@@ -39,6 +39,7 @@ export const auth = async (msg: Message): Promise<boolean> => {
         year: "",
         married: false,
         childrens: 0,
+        subscribedYears: [],
       });
       const users = await getDocs(
         query(

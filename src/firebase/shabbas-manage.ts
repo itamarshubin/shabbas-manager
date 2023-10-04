@@ -1,14 +1,11 @@
 import {
   DocumentData,
   DocumentReference,
-  FieldValue,
   QueryDocumentSnapshot,
   addDoc,
   arrayRemove,
   arrayUnion,
   collection,
-  doc,
-  getDoc,
   getDocFromServer,
   getDocs,
   getFirestore,
@@ -37,13 +34,19 @@ const getShabbasDoc = async (): Promise<
   return shabbasDocs.docs[0];
 };
 
-export const addUser = async (msg: Message) => {
-  const shabbas = await getShabbasDoc();
+const getUserRef = async (msg: Message) => {
   const userRef = (
     await getDocs(
       query(collection(fireStore, "/users"), where("phone", "==", msg.from))
     )
   ).docs[0];
+  return userRef;
+}
+
+
+export const addUser = async (msg: Message) => {
+  const shabbas = await getShabbasDoc();
+  const userRef = await getUserRef(msg);
 
   if (
     shabbas
@@ -58,11 +61,7 @@ export const addUser = async (msg: Message) => {
 };
 
 export const removeUser = async (msg: Message) => {
-  const userRef = (
-    await getDocs(
-      query(collection(fireStore, "/users"), where("phone", "==", msg.from))
-    )
-  ).docs[0];
+  const userRef = await getUserRef(msg);
 
   const shabbas = await getShabbasDoc();
 
@@ -78,7 +77,9 @@ export const removeUser = async (msg: Message) => {
 
 export const getParticipants = async (msg: Message) => {
   const shabbas = await getShabbasDoc();
+  const userRef = await getUserRef(msg);
 
+  const subscribedYears: string[] = userRef.get("subscribedYears")
   const participant: DocumentReference<DocumentData>[] =
     shabbas.data().participants;
   if (!participant) {
@@ -103,8 +104,16 @@ export const getParticipants = async (msg: Message) => {
   let finalMsg = "";
 
   for (const [key, value] of Object.entries(help).sort()) {
-    finalMsg += `*${key}*\n`;
-    value.forEach((year) => (finalMsg += `${year}\n`));
+    if (subscribedYears){
+      if (`${key}` in subscribedYears){
+        finalMsg += `*${key}*\n`;
+        value.forEach((year) => (finalMsg += `${year}\n`));    
+      }
+    }
+    else{
+      finalMsg += `*${key}*\n`;
+      value.forEach((year) => (finalMsg += `${year}\n`));    
+    }
   }
 
   client.sendMessage(msg.from, finalMsg);
@@ -190,3 +199,19 @@ export const setRabbi = async (msg: Message) => {
     rabbi: msg.body.substr(msg.body.indexOf(" ") + 1),
   });
 };
+
+export let isMidAddSubscriberSession: Boolean = false
+
+export const addSubscribedYears = async (msg: Message) => {
+  const userRef = await getUserRef(msg);
+  if (!isMidAddSubscriberSession){
+      client.sendMessage(msg.from, "כתוב את המחזורים שמעניינים אותך")
+      isMidAddSubscriberSession = true;
+  }
+  else {
+    const years: string[] = msg.body.split(" ");
+    await updateDoc(userRef.ref, {subscribedYears: years})
+    isMidAddSubscriberSession = false
+  }
+  
+}
