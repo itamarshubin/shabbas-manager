@@ -9,6 +9,8 @@ import {
   removeUser,
   setRabbi,
   whoIsTheRabbi,
+  isMidAddSubscriberSession,
+  addSubscribedYears,
 } from "./firebase/shabbas-manage";
 
 export const messageHandler = async (msg: Message) => {
@@ -35,6 +37,10 @@ export const messageHandler = async (msg: Message) => {
   }
 
   if (msg.body.includes("מי מגיע")) {
+    await client.sendMessage(
+      msg.from,
+      "פיצ'ר חדש* מעכשיו תוכל לערוך אילו מחזורים מעניינים אותך על ידי הפקודה מי מעניין* "
+    )
     await getParticipants(msg);
     return;
   }
@@ -44,6 +50,10 @@ export const messageHandler = async (msg: Message) => {
     return;
   }
 
+  if (msg.body.includes("מי מעניין") || isMidAddSubscriberSession){
+    await addSubscribedYears(msg)
+    return;
+  }
   if (!(await auth(msg))) {
     return;
   }
@@ -62,11 +72,11 @@ export const messageHandler = async (msg: Message) => {
       await client.sendMessage(
         msg.from,
         `
-      היי, זה בוט השבתות של דרך חיים, הוא לא יודע לעשות הרבה. זה מה שאפשר לעשות בנתיים:
-      כן - מאשר הגעה לשבת
-      לא - ביטול הגעה לשבת
-      מי מגיע - רשימה של כל מי שאישר בנתיים הגעה לשבת
-      מי הרב - מי הרב שיהיה בשבת
+      היי, זה בוט השבתות ויו"ט של דרך חיים, הוא לא יודע לעשות הרבה. זה מה שאפשר לעשות בנתיים:
+      כן - מאשר הגעה 
+      לא - ביטול הגעה 
+      מי מגיע - רשימה של כל מי שאישר בנתיים הגעה 
+      מי הרב - מי הרב שיהיה 
       בעתיד יתווספו פעולות נוספות 😁
       אם ישנה בעייה צור קשר עם איתמר שובין (051-2665020)
       `
