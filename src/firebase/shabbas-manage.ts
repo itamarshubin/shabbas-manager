@@ -105,9 +105,10 @@ export const getParticipants = async (msg: Message) => {
   console.log(Object.entries(help).sort());
   
   for (const [key, value] of Object.entries(help).sort()) {
-    console.log(subscribedYears);
     if (subscribedYears){
-      if (`${key}` in subscribedYears){
+      console.log("Key =", key);
+      
+      if (key in subscribedYears){
         finalMsg += `*${key}*\n`;
         value.forEach((year) => (finalMsg += `${year}\n`));    
       }
