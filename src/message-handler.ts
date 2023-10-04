@@ -39,7 +39,7 @@ export const messageHandler = async (msg: Message) => {
   if (msg.body.includes("מי מגיע")) {
     await client.sendMessage(
       msg.from,
-      "פיצ'ר חדש* מעכשיו תוכל לערוך אילו מחזורים מעניינים אותך על ידי הפקודה מי מעניין* "
+      "*פיצ'ר חדש!!!* מעכשיו תוכל לערוך אילו מחזורים מעניינים אותך על ידי הפקודה מי מעניין "
     )
     await getParticipants(msg);
     return;
