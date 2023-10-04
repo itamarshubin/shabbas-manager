@@ -102,8 +102,10 @@ export const getParticipants = async (msg: Message) => {
   });
 
   let finalMsg = "";
-
+  console.log(Object.entries(help).sort());
+  
   for (const [key, value] of Object.entries(help).sort()) {
+    console.log(subscribedYears);
     if (subscribedYears){
       if (`${key}` in subscribedYears){
         finalMsg += `*${key}*\n`;
@@ -210,6 +212,7 @@ export const addSubscribedYears = async (msg: Message) => {
   }
   else {
     const years: string[] = msg.body.split(" ");
+    console.log("years are: \n", years);
     await updateDoc(userRef.ref, {subscribedYears: years})
     isMidAddSubscriberSession = false
   }
