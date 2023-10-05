@@ -182,7 +182,7 @@ export const addSubscribedYears = async (msg: Message) => {
     const years: string[] = msg.body.split(" ");
     for (let year of years) {
       if (!ALL_YESHIVA_YEARS.includes(year)) {
-        client.sendMessage(msg.from, `אה והמחזורים חייבים להיות קיימים ימצחיק😠 הפורמט לכתיבת המחזורים הוא 'א ה ו' לא ככה : ${msg.body}`) 
+        client.sendMessage(msg.from, `הפורמט לכתיבת המחזורים הוא 'א ה ו' לא ככה : ${msg.body}\n אה והמחזורים חייבים להיות קיימים ימצחיק😠`) 
         resetSubscribedYears(msg, userRef);
         return;
       }
