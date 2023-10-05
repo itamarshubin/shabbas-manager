@@ -11,6 +11,7 @@ import {
   whoIsTheRabbi,
   isMidAddSubscriberSession,
   addSubscribedYears,
+  resetSubscribedYears,
 } from "./firebase/shabbas-manage";
 
 export const messageHandler = async (msg: Message) => {
@@ -52,6 +53,10 @@ export const messageHandler = async (msg: Message) => {
 
   if (msg.body.includes("מי מעניין") || isMidAddSubscriberSession){
     await addSubscribedYears(msg)
+    return;
+  }
+  if (msg.body.includes("כולם מעניינים אותי")){
+    await resetSubscribedYears(msg)
     return;
   }
   if (!(await auth(msg))) {

@@ -17,6 +17,7 @@ import {
 } from "firebase/firestore";
 import { Message } from "whatsapp-web.js";
 import { client } from "../app";
+import { YESHIVA_YEARS as ALL_YESHIVA_YEARS } from "../utils";
 
 const fireStore = getFirestore();
 
@@ -103,15 +104,15 @@ export const getParticipants = async (msg: Message) => {
 
   let finalMsg = "";
   for (const [key, value] of Object.entries(help).sort()) {
-    if (subscribedYears){
-      if (subscribedYears.includes(key)){
+    if (subscribedYears) {
+      if (subscribedYears.includes(key)) {
         finalMsg += `*${key}*\n`;
-        value.forEach((year) => (finalMsg += `${year}\n`));    
+        value.forEach((year) => (finalMsg += `${year}\n`));
       }
     }
-    else{
+    else {
       finalMsg += `*${key}*\n`;
-      value.forEach((year) => (finalMsg += `${year}\n`));    
+      value.forEach((year) => (finalMsg += `${year}\n`));
     }
   }
 
@@ -203,15 +204,33 @@ export let isMidAddSubscriberSession: Boolean = false
 
 export const addSubscribedYears = async (msg: Message) => {
   const userRef = await getUserRef(msg);
-  if (!isMidAddSubscriberSession){
-      client.sendMessage(msg.from, "כתוב את המחזורים שמעניינים אותך")
-      isMidAddSubscriberSession = true;
+  if (!isMidAddSubscriberSession) {
+    client.sendMessage(msg.from, "כתוב את המחזורים שמעניינים אותך")
+    isMidAddSubscriberSession = true;
   }
   else {
     const years: string[] = msg.body.split(" ");
+    for (let year of years) {
+      if (!ALL_YESHIVA_YEARS.includes(year)) {
+        resetSubscribedYears(msg, userRef)
+        return;
+      }
+    }
+    client.sendMessage(msg.from, ` המחזורים שמעניינים אותך הם: ${years}`)
+    client.sendMessage(msg.from, "אם תרצה לבטל את הסינון תוכל לשלוח את ההודעה 'כולם מעניינים אותי'")
     years.push("ללא שנה");
-    await updateDoc(userRef.ref, {subscribedYears: years})
-    isMidAddSubscriberSession = false
+    finalizeSubscribedYears(userRef, years)
   }
-  
+
+}
+const finalizeSubscribedYears = async (userRef: QueryDocumentSnapshot<DocumentData>, years: string[]) => {
+  await updateDoc(userRef.ref, { subscribedYears: years })
+  isMidAddSubscriberSession = false
+}
+
+export const resetSubscribedYears = async (msg: Message, userRef?: QueryDocumentSnapshot<DocumentData>) => {
+  if (!userRef) {
+    userRef = await getUserRef(msg);
+  }
+  finalizeSubscribedYears(<QueryDocumentSnapshot<DocumentData>>userRef, ALL_YESHIVA_YEARS)
 }
