@@ -102,13 +102,9 @@ export const getParticipants = async (msg: Message) => {
   });
 
   let finalMsg = "";
-  console.log(Object.entries(help).sort());
-  
   for (const [key, value] of Object.entries(help).sort()) {
     if (subscribedYears){
-      console.log("Key =", key);
-      
-      if (key in subscribedYears){
+      if (subscribedYears.includes(key)){
         finalMsg += `*${key}*\n`;
         value.forEach((year) => (finalMsg += `${year}\n`));    
       }
@@ -213,7 +209,7 @@ export const addSubscribedYears = async (msg: Message) => {
   }
   else {
     const years: string[] = msg.body.split(" ");
-    console.log("years are: \n", years);
+    years.push("ללא שנה");
     await updateDoc(userRef.ref, {subscribedYears: years})
     isMidAddSubscriberSession = false
   }
