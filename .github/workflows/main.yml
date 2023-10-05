@@ -19,5 +19,5 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: cd_log
-        path: cd_log.log
+        path: /home/ubuntu/shabbas-manager/cd_log.log
 
