@@ -17,7 +17,7 @@ import {
 } from "firebase/firestore";
 import { Message } from "whatsapp-web.js";
 import { client } from "../app";
-import { YESHIVA_YEARS as ALL_YESHIVA_YEARS } from "../utils";
+import { ALL_YESHIVA_YEARS } from "../constants/yeshiva-years";
 
 const fireStore = getFirestore();
 
