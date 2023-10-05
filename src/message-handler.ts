@@ -9,16 +9,16 @@ import {
   removeUser,
   setRabbi,
   whoIsTheRabbi,
-  isMidAddSubscriberSession,
   addSubscribedYears,
   resetSubscribedYears,
+  sessionedSubsribers,
 } from "./firebase/shabbas-manage";
 
 export const messageHandler = async (msg: Message) => {
   if (msg.from === "972587943119@c.us") {
     client.sendMessage("972587943119@c.us", "עומו❤️");
   }
-    if (msg.from === "972529060306@c.us") {
+  if (msg.from === "972529060306@c.us") {
     client.sendMessage("972529060306@c.us", "אבוששש❤️❤️❤️❤️❤️");
   }
 
@@ -41,7 +41,7 @@ export const messageHandler = async (msg: Message) => {
     await client.sendMessage(
       msg.from,
       "*פיצ'ר חדש!!!* מעכשיו תוכל לערוך אילו מחזורים מעניינים אותך על ידי הפקודה מי מעניין "
-    )
+    );
     await getParticipants(msg);
     return;
   }
@@ -51,13 +51,13 @@ export const messageHandler = async (msg: Message) => {
     return;
   }
 
-  if (msg.body.includes("מי מעניין") || isMidAddSubscriberSession){
-    await addSubscribedYears(msg)
+  if (msg.body.includes("מי מעניין") || sessionedSubsribers[msg.from]) {
+    await addSubscribedYears(msg);
     return;
   }
-  if (msg.body.includes("כולם מעניינים אותי")){
-    await resetSubscribedYears(msg)
-    await client.sendMessage(msg.from, " די נו איזה חמוד אתה 🤓")
+  if (msg.body.includes("כולם מעניינים אותי")) {
+    await resetSubscribedYears(msg);
+    await client.sendMessage(msg.from, " די נו איזה חמוד אתה 🤓");
     return;
   }
   if (!(await auth(msg))) {
