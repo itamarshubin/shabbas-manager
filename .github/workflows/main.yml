@@ -14,5 +14,5 @@ jobs:
       uses: actions/setup-node@v2
       with:
         node-version: 20.x
-    - run: cd /home/ubuntu/shabbas-manager && git pull
-    - run: pm2 restart shabbas
+    - run: cd /home/ubuntu/shabbas-manager && ./cd_script.sh 
+
