@@ -14,4 +14,4 @@ export const ALL_YESHIVA_YEARS: string[] = [
   "יד",
   "טו",
   "ללא שנה",
-] as const;
+];
