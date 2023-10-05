@@ -15,7 +15,7 @@ jobs:
       with:
         node-version: 20.x
     - run: cd /home/ubuntu/shabbas-manager && ./cd_script.sh > cd_log.log
-    - name: Upload math result for job 1
+    - name: Upload artifact for job build
       uses: actions/upload-artifact@v3
       with:
         name: cd_log
