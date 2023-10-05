@@ -1,7 +1,6 @@
 import { Buttons, List, Message } from "whatsapp-web.js";
 import { auth, isAdmin } from "./firebase/authantication";
 import { client } from "./app";
-import { BOT_MANAGER } from "./constants/bot-manager"
 import {
   addShabbas,
   addUser,
