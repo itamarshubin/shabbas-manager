@@ -57,6 +57,7 @@ export const messageHandler = async (msg: Message) => {
   }
   if (msg.body.includes("כולם מעניינים אותי")){
     await resetSubscribedYears(msg)
+    await client.sendMessage(msg.from, " די נו איזה חמוד אתה 🤓")
     return;
   }
   if (!(await auth(msg))) {
