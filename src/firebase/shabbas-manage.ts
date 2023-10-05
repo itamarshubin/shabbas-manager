@@ -171,13 +171,13 @@ export const setRabbi = async (msg: Message) => {
   });
 };
 
-export const sessionedSubsribers: Record<string, boolean> = {};
+export const sessionedSubscribers: Record<string, boolean> = {};
 
 export const addSubscribedYears = async (msg: Message) => {
   const userRef = await getUserRef(msg);
-  if (!sessionedSubsribers[msg.from]) {
+  if (!sessionedSubscribers[msg.from]) {
     client.sendMessage(msg.from, "כתוב את המחזורים שמעניינים אותך");
-    sessionedSubsribers[msg.from] = true;
+    sessionedSubscribers[msg.from] = true;
   } else {
     const years: string[] = msg.body.split(" ");
     for (let year of years) {
@@ -199,7 +199,7 @@ const finalizeSubscribedYears = async (
   phoneNumber: string
 ) => {
   await updateDoc(userRef.ref, { subscribedYears: years });
-  sessionedSubsribers[phoneNumber] = false;
+  sessionedSubscribers[phoneNumber] = false;
 };
 
 export const resetSubscribedYears = async (msg: Message, userRef?: QueryDocumentSnapshot<DocumentData>) => {
