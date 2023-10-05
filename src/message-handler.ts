@@ -11,7 +11,7 @@ import {
   whoIsTheRabbi,
   addSubscribedYears,
   resetSubscribedYears,
-  sessionedSubsribers,
+  sessionedSubscribers,
 } from "./firebase/shabbas-manage";
 import { HELP_MESSAGE } from "./constants/help-message";
 
@@ -52,7 +52,7 @@ export const messageHandler = async (msg: Message) => {
     return;
   }
 
-  if (msg.body.includes("מי מעניין") || sessionedSubsribers[msg.from]) {
+  if (msg.body.includes("מי מעניין") || sessionedSubscribers[msg.from]) {
     await addSubscribedYears(msg);
     return;
   }
