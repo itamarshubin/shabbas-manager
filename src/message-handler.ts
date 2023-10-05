@@ -1,6 +1,7 @@
 import { Buttons, List, Message } from "whatsapp-web.js";
 import { auth, isAdmin } from "./firebase/authantication";
 import { client } from "./app";
+import { BOT_MANAGER } from "./constants/bot-manager"
 import {
   addShabbas,
   addUser,
@@ -86,7 +87,7 @@ export const messageHandler = async (msg: Message) => {
       מי מעניין - אפשרות לסינון מחזורים שמעניינים אותך על הפקודה 'מי מגיע'
       כולם מעניינים אותי - ביטול הסינונים על הפקודה 'מי מגיע'
       בעתיד יתווספו פעולות נוספות 😁
-      אם ישנה בעייה צור קשר עם איתמר שובין (051-2665020)
+      אם ישנה בעייה צור קשר עם ${BOT_MANAGER.name} (${BOT_MANAGER.phoneNumber})
       `
       );
       break;
