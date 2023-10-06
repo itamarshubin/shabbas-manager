@@ -8,6 +8,7 @@ export const ALL_YESHIVA_YEARS: string[] = [
   "ז",
   "ח",
   "ט",
+  "י",
   "יא",
   "יב",
   "יג",
