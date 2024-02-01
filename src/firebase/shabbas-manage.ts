@@ -46,6 +46,71 @@ export const addUser = async (msg: Message) => {
   }
 };
 
+// Add alcoholic function
+export const addAlcoholic = async (msg: Message) => {
+  const shabbas = await getShabbasDoc();
+  const userRef = await getUserRef(msg);
+
+  if (shabbas.data().alcoholics?.find((par: { id: string }) => par.id === userRef.id)) {
+    await client.sendMessage(msg.from, "אתה כבר נרשמת לאלכוהול.");
+  } else {
+    await updateDoc(shabbas.ref, { alcoholics: arrayUnion(userRef.ref) });
+    await client.sendMessage(msg.from, "אחלה, אלכוהול זה טוב.");
+  }
+};
+
+// Remove alcoholic function
+export const removeAlcoholic = async (msg: Message) => {
+  const userRef = await getUserRef(msg);
+
+  const shabbas = await getShabbasDoc();
+
+  if (shabbas.data().alcoholics?.find((par: { id: string }) => par.id === userRef.id)) {
+    await updateDoc(shabbas.ref, { alcoholics: arrayRemove(userRef.ref) });
+  }
+  await client.sendMessage(msg.from, "אוקי, עברת את המבחן הסודי. אתה מוכן לשידוכים.");
+};
+
+// Get alcoholics
+export const getAlcoholics = async (msg: Message) => {
+  const shabbas = await getShabbasDoc();
+  const userRef = await getUserRef(msg);
+
+  const subscribedYears: string[] = userRef.get("subscribedYears");
+  const alcoholic: DocumentReference<DocumentData>[] = shabbas.data().alcoholics;
+  if (!alcoholic) {
+    client.sendMessage(msg.from, "בינתיים אף אחד רוצה אלכוהול.");
+    return;
+  }
+  const alcoholicsData = await Promise.all(
+    alcoholic.map(async (alcoholicRef) => (await getDocFromServer(alcoholicRef)).data())
+  );
+
+  const help: Record<string, any[]> = {};
+
+  alcoholicsData.forEach((user) => {
+    if (!help[user?.year || "ללא שנה"]) {
+      help[user?.year || "ללא שנה"] = [];
+    }
+    help[user?.year || "ללא שנה"].push(user?.name);
+  });
+
+  let finalMsg = "";
+  for (const [key, value] of Object.entries(help).sort()) {
+    if (subscribedYears) {
+      if (subscribedYears.includes(key)) {
+        finalMsg += `*${key}*\n`;
+        value.forEach((year) => (finalMsg += `${year}\n`));
+      }
+    } else {
+      finalMsg += `*${key}*\n`;
+      value.forEach((year) => (finalMsg += `${year}\n`));
+    }
+  }
+
+  client.sendMessage(msg.from, finalMsg);
+};
+
 export const removeUser = async (msg: Message) => {
   const userRef = await getUserRef(msg);
 
