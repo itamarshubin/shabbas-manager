@@ -76,7 +76,7 @@ export const getAlcoholics = async (msg: Message) => {
   const subscribedYears: string[] = userRef.get("subscribedYears");
   const alcoholic: DocumentReference<DocumentData>[] = shabbas.data().alcoholics;
   if (!alcoholic) {
-    client.sendMessage(msg.from, "בינתיים אף אחד רוצה אלכוהול.");
+    client.sendMessage(msg.from, "בינתיים אף אחד לא רוצה אלכוהול.");
     return;
   }
   const alcoholicsData = await Promise.all(

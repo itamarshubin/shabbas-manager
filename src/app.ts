@@ -1,6 +1,8 @@
 import { initializeApp } from "firebase/app";
 require("dotenv").config();
 
+
+
 if (!process.env.API_KEY) throw "you need to set env first";
 const firebaseConfig = {
   apiKey: process.env.API_KEY,
@@ -27,7 +29,6 @@ export const client = new Client({
     headless: true,
   },
 });
-
 console.log("start initializing whatsapp client");
 client.initialize();
 console.log("done initializing whatsapp client");
