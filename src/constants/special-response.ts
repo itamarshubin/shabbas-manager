@@ -14,6 +14,5 @@ let specialMessages:any;
 
 
 export const sendSpecialMessages = (from: string, client: Client) => {
-  console.log(specialMessages);
   if (specialMessages[from]) client.sendMessage(from, specialMessages[from]);
 };
