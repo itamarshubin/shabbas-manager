@@ -1,4 +1,4 @@
-import { Buttons, Client, List, Message } from "whatsapp-web.js";
+import { Message } from "whatsapp-web.js";
 import { auth, isAdmin } from "./firebase/authantication";
 import { client } from "./app";
 import {
