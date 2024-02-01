@@ -12,6 +12,9 @@ import {
   addSubscribedYears,
   resetSubscribedYears,
   sessionedSubscribers,
+  addAlcoholic,
+  removeAlcoholic,
+  getAlcoholics,
 } from "./firebase/shabbas-manage";
 import { HELP_MESSAGE } from "./constants/help-message";
 import { sendSpecialMessages } from "./constants/special-response";
@@ -58,6 +61,21 @@ export const messageHandler = async (msg: Message) => {
     return;
   }
   if (!(await auth(msg))) {
+    return;
+  }
+  
+  if (msg.body.includes("מי מביא אלכוהול")) {
+    await getAlcoholics(msg);
+    return;
+  }
+
+  if (msg.body.includes("אני רוצה אלכוהול")) {
+    await addAlcoholic(msg);
+    return;
+  }
+
+  if (msg.body.includes("אני לא רוצה אלכוהול")) {
+    await removeAlcoholic(msg);
     return;
   }
 
