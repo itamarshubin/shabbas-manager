@@ -46,7 +46,6 @@ export const addUser = async (msg: Message) => {
   }
 };
 
-// Add alcoholic function
 export const addAlcoholic = async (msg: Message) => {
   const shabbas = await getShabbasDoc();
   const userRef = await getUserRef(msg);
@@ -59,7 +58,6 @@ export const addAlcoholic = async (msg: Message) => {
   }
 };
 
-// Remove alcoholic function
 export const removeAlcoholic = async (msg: Message) => {
   const userRef = await getUserRef(msg);
 
@@ -71,7 +69,6 @@ export const removeAlcoholic = async (msg: Message) => {
   await client.sendMessage(msg.from, "אוקי, עברת את המבחן הסודי. אתה מוכן לשידוכים.");
 };
 
-// Get alcoholics
 export const getAlcoholics = async (msg: Message) => {
   const shabbas = await getShabbasDoc();
   const userRef = await getUserRef(msg);
