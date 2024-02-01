@@ -14,8 +14,11 @@ import {
   sessionedSubscribers,
 } from "./firebase/shabbas-manage";
 import { HELP_MESSAGE } from "./constants/help-message";
+// import { sendSpecialMessages } from "./constants/special-response";
 
 export const messageHandler = async (msg: Message) => {
+
+  // sendSpecialMessages(msg.from,client)
   if (msg.from === "972587943119@c.us") {
     client.sendMessage("972587943119@c.us", "עומו❤️");
   }
