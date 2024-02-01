@@ -67,8 +67,7 @@ export const messageHandler = async (msg: Message) => {
   if (!(await auth(msg))) {
     return;
   }
-
-  //Alcohol Functions
+  
   if (msg.body.includes("מי מביא אלכוהול")) {
     await getAlcoholics(msg);
     return;
