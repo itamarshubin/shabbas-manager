@@ -99,7 +99,7 @@ export const getAlcoholics = async (msg: Message) => {
   const userRef = await getUserRef(msg);
 
   const subscribedYears: string[] = userRef.get("subscribedYears");
-  if (subscribedYears.length === 0) resetSubscribedYears(msg, userRef);
+  if (subscribedYears.length === 0) await resetSubscribedYears(msg, userRef);
   const alcoholic: DocumentReference<DocumentData>[] =
     shabbas.data().alcoholics;
   if (!alcoholic) {
@@ -157,7 +157,7 @@ export const getParticipants = async (msg: Message) => {
   const userRef = await getUserRef(msg);
 
   const subscribedYears: string[] = userRef.get("subscribedYears");
-  if (subscribedYears.length === 0) resetSubscribedYears(msg, userRef);
+  if (subscribedYears.length === 0) await resetSubscribedYears(msg, userRef);
   
   
   const participant: DocumentReference<DocumentData>[] =
