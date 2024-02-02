@@ -21,16 +21,26 @@ import { ALL_YESHIVA_YEARS } from "../constants/yeshiva-years";
 
 const fireStore = getFirestore();
 
-const getShabbasDoc = async (): Promise<QueryDocumentSnapshot<DocumentData>> => {
+const getShabbasDoc = async (): Promise<
+  QueryDocumentSnapshot<DocumentData>
+> => {
   const shabbasRef = collection(fireStore, "/shabbasses");
-  const shabbasQuery = query(shabbasRef, orderBy("shabbas_count", "desc"), limit(1));
+  const shabbasQuery = query(
+    shabbasRef,
+    orderBy("shabbas_count", "desc"),
+    limit(1)
+  );
   const shabbasDocs = await getDocs(shabbasQuery);
 
   return shabbasDocs.docs[0];
 };
 
 const getUserRef = async (msg: Message) => {
-  const userRef = (await getDocs(query(collection(fireStore, "/users"), where("phone", "==", msg.from)))).docs[0];
+  const userRef = (
+    await getDocs(
+      query(collection(fireStore, "/users"), where("phone", "==", msg.from))
+    )
+  ).docs[0];
   return userRef;
 };
 
@@ -38,7 +48,11 @@ export const addUser = async (msg: Message) => {
   const shabbas = await getShabbasDoc();
   const userRef = await getUserRef(msg);
 
-  if (shabbas.data().participants?.find((par: { id: string }) => par.id === userRef.id)) {
+  if (
+    shabbas
+      .data()
+      .participants?.find((par: { id: string }) => par.id === userRef.id)
+  ) {
     await client.sendMessage(msg.from, "אתה כבר נרשמת לשבת.");
   } else {
     await updateDoc(shabbas.ref, { participants: arrayUnion(userRef.ref) });
@@ -50,7 +64,11 @@ export const addAlcoholic = async (msg: Message) => {
   const shabbas = await getShabbasDoc();
   const userRef = await getUserRef(msg);
 
-  if (shabbas.data().alcoholics?.find((par: { id: string }) => par.id === userRef.id)) {
+  if (
+    shabbas
+      .data()
+      .alcoholics?.find((par: { id: string }) => par.id === userRef.id)
+  ) {
     await client.sendMessage(msg.from, "אתה כבר נרשמת לאלכוהול.");
   } else {
     await updateDoc(shabbas.ref, { alcoholics: arrayUnion(userRef.ref) });
@@ -63,10 +81,17 @@ export const removeAlcoholic = async (msg: Message) => {
 
   const shabbas = await getShabbasDoc();
 
-  if (shabbas.data().alcoholics?.find((par: { id: string }) => par.id === userRef.id)) {
+  if (
+    shabbas
+      .data()
+      .alcoholics?.find((par: { id: string }) => par.id === userRef.id)
+  ) {
     await updateDoc(shabbas.ref, { alcoholics: arrayRemove(userRef.ref) });
   }
-  await client.sendMessage(msg.from, "אוקי, עברת את המבחן הסודי. אתה מוכן לשידוכים.");
+  await client.sendMessage(
+    msg.from,
+    "אוקי, עברת את המבחן הסודי. אתה מוכן לשידוכים."
+  );
 };
 
 export const getAlcoholics = async (msg: Message) => {
@@ -74,13 +99,17 @@ export const getAlcoholics = async (msg: Message) => {
   const userRef = await getUserRef(msg);
 
   const subscribedYears: string[] = userRef.get("subscribedYears");
-  const alcoholic: DocumentReference<DocumentData>[] = shabbas.data().alcoholics;
+  if (subscribedYears.length === 0) resetSubscribedYears(msg, userRef);
+  const alcoholic: DocumentReference<DocumentData>[] =
+    shabbas.data().alcoholics;
   if (!alcoholic) {
     client.sendMessage(msg.from, "בינתיים אף אחד לא רוצה אלכוהול.");
     return;
   }
   const alcoholicsData = await Promise.all(
-    alcoholic.map(async (alcoholicRef) => (await getDocFromServer(alcoholicRef)).data())
+    alcoholic.map(async (alcoholicRef) =>
+      (await getDocFromServer(alcoholicRef)).data()
+    )
   );
 
   const help: Record<string, any[]> = {};
@@ -113,7 +142,11 @@ export const removeUser = async (msg: Message) => {
 
   const shabbas = await getShabbasDoc();
 
-  if (shabbas.data().participants?.find((par: { id: string }) => par.id === userRef.id)) {
+  if (
+    shabbas
+      .data()
+      .participants?.find((par: { id: string }) => par.id === userRef.id)
+  ) {
     await updateDoc(shabbas.ref, { participants: arrayRemove(userRef.ref) });
   }
   await client.sendMessage(msg.from, "טוב נו... פעם הבאה.");
@@ -124,13 +157,19 @@ export const getParticipants = async (msg: Message) => {
   const userRef = await getUserRef(msg);
 
   const subscribedYears: string[] = userRef.get("subscribedYears");
-  const participant: DocumentReference<DocumentData>[] = shabbas.data().participants;
+  if (subscribedYears.length === 0) resetSubscribedYears(msg, userRef);
+  
+  
+  const participant: DocumentReference<DocumentData>[] =
+    shabbas.data().participants;
   if (!participant) {
     client.sendMessage(msg.from, "אף אחד עוד לא נרשם לשבת");
     return;
   }
   const participantsData = await Promise.all(
-    participant.map(async (participantRef) => (await getDocFromServer(participantRef)).data())
+    participant.map(async (participantRef) =>
+      (await getDocFromServer(participantRef)).data()
+    )
   );
 
   const help: Record<string, any[]> = {};
@@ -171,7 +210,10 @@ export const addShabbas = async (msg: Message) => {
     rabbi: "",
   });
 
-  client.sendMessage(msg.from, `עכשיו נרשמים ל: ${messageArray.join().replace(",", " ")}`);
+  client.sendMessage(
+    msg.from,
+    `עכשיו נרשמים ל: ${messageArray.join().replace(",", " ")}`
+  );
 };
 
 export const whoIsTheRabbi = async (msg: Message) => {
@@ -188,13 +230,16 @@ export const whoIsTheRabbi = async (msg: Message) => {
 export const calculateFood = async (msg: Message) => {
   const shabbas = await getShabbasDoc();
 
-  const participant: DocumentReference<DocumentData>[] = shabbas.data().participants;
+  const participant: DocumentReference<DocumentData>[] =
+    shabbas.data().participants;
   if (!participant) {
     client.sendMessage(msg.from, "אף אחד עוד לא נרשם לשבת");
     return;
   }
   const participantsData = await Promise.all(
-    participant.map(async (participantRef) => (await getDocFromServer(participantRef)).data())
+    participant.map(async (participantRef) =>
+      (await getDocFromServer(participantRef)).data()
+    )
   );
 
   const help: Record<string, any[]> = {};
@@ -244,13 +289,19 @@ export const addSubscribedYears = async (msg: Message) => {
     const years: string[] = msg.body.split(" ");
     for (let year of years) {
       if (!ALL_YESHIVA_YEARS.includes(year)) {
-        client.sendMessage(msg.from, `הפורמט לכתיבת המחזורים הוא 'א ה ו' לא ככה : ${msg.body}\n אה והמחזורים חייבים להיות קיימים ימצחיק😠`) 
+        client.sendMessage(
+          msg.from,
+          `הפורמט לכתיבת המחזורים הוא 'א ה ו' לא ככה : ${msg.body}\n אה והמחזורים חייבים להיות קיימים ימצחיק😠`
+        );
         resetSubscribedYears(msg, userRef);
         return;
       }
     }
     client.sendMessage(msg.from, ` המחזורים שמעניינים אותך הם: ${years}`);
-    client.sendMessage(msg.from, "אם תרצה לבטל את הסינון תוכל לשלוח את ההודעה 'כולם מעניינים אותי'");
+    client.sendMessage(
+      msg.from,
+      "אם תרצה לבטל את הסינון תוכל לשלוח את ההודעה 'כולם מעניינים אותי'"
+    );
     years.push("ללא שנה");
     finalizeSubscribedYears(userRef, years, msg.from);
   }
@@ -264,7 +315,14 @@ const finalizeSubscribedYears = async (
   sessionedSubscribers[phoneNumber] = false;
 };
 
-export const resetSubscribedYears = async (msg: Message, userRef?: QueryDocumentSnapshot<DocumentData>) => {
+export const resetSubscribedYears = async (
+  msg: Message,
+  userRef?: QueryDocumentSnapshot<DocumentData>
+) => {
   userRef = userRef || (await getUserRef(msg));
-  finalizeSubscribedYears(<QueryDocumentSnapshot<DocumentData>>userRef, ALL_YESHIVA_YEARS, msg.from);
+  finalizeSubscribedYears(
+    <QueryDocumentSnapshot<DocumentData>>userRef,
+    ALL_YESHIVA_YEARS,
+    msg.from
+  );
 };
