@@ -12,5 +12,3 @@ how to use:
 
 my setup is ec2 in aws.
 I didn't use Docker, so if you want your project to run on linux (at least ubuntu) you need to install all the packages in the Docker file.
-
-
