@@ -99,6 +99,9 @@ export const removeAlertSubscription = async (msg: Message) => {
   await updateDoc(userToRemove.ref, {
     subscribedUsers: arrayRemove(userRef.ref),
   });
+  await updateDoc(userRef.ref, {
+    subscribedTo: arrayRemove(userToRemove.ref),
+  });
   client.sendMessage(
     msg.from,
     `הסרנו את ${userToRemove.data()?.name}, לא תקבל יותר עדכונים עליו`
