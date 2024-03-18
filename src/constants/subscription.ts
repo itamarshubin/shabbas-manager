@@ -62,8 +62,7 @@ export const removeAlertSubscription = async (msg: Message) => {
   if (!sessionedRemoveSubscribersAlert[msg.from]) {
     const userRef = await getUserRef(msg);
 
-    const followersRef: DocumentReference<User>[] =
-      userRef.data().subscribedUsers;
+    const followersRef: DocumentReference<User>[] = userRef.data().subscribedTo;
     const followers = await Promise.all(
       followersRef.map((followerRef) => getDocFromServer(followerRef))
     );
@@ -166,6 +165,7 @@ export const createAlertSubscription = async (msg: Message) => {
     );
   }
   await updateDoc(userToAdd.ref, { subscribedUsers: arrayUnion(userRef.ref) });
+  await updateDoc(userRef.ref, { subscribedTo: arrayUnion(userToAdd.ref) });
   client.sendMessage(
     msg.from,
     `תקבל הודעה כש${userToAdd.data().name} יעדכן על מצב ההגעה שלו`
