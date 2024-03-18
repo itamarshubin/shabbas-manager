@@ -49,15 +49,12 @@ export const messageHandler = async (msg: Message) => {
     return;
   }
 
-  if (
-    msg.body.includes("עדכן אותי") ||
-    sessionedAddSubscribersAlert[msg.from]
-  ) {
+  if (msg.body === "עדכן אותי") {
     await createAlertSubscription(msg);
     return;
   }
 
-  if (msg.body.includes("אל תעדכן")) {
+  if (msg.body === "אל תעדכן") {
     await removeAlertSubscription(msg);
     return;
   }
