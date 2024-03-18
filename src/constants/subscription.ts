@@ -79,7 +79,7 @@ export const removeAlertSubscription = async (msg: Message) => {
 
     client.sendMessage(
       msg.from,
-      response + " שלח את המספר של מי שאתה רוצה להסיר"
+      response + " שלח את המספר של מי שאתה רוצה להסיר לביטול שלח 'בטל'"
     );
     sessionedRemoveSubscribersAlert[msg.from] = { followers };
     return;
