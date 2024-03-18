@@ -18,9 +18,49 @@ import {
 } from "./firebase/shabbas-manage";
 import { HELP_MESSAGE } from "./constants/help-message";
 import { sendSpecialMessages } from "./constants/special-response";
+import {
+  createAlertSubscription,
+  removeAlertSubscription,
+  sessionedAddSubscribersAlert,
+  sessionedRemoveSubscribersAlert,
+} from "./constants/subscription";
 
 export const messageHandler = async (msg: Message) => {
   sendSpecialMessages(msg.from, client);
+
+  //prevent interrupt in middle action
+  if (sessionedSubscribers[msg.from]) {
+    await addSubscribedYears(msg);
+    return;
+  }
+
+  if (sessionedAddSubscribersAlert[msg.from]) {
+    await createAlertSubscription(msg);
+    return;
+  }
+
+  if (sessionedRemoveSubscribersAlert[msg.from]) {
+    await removeAlertSubscription(msg);
+    return;
+  }
+
+  if (msg.body.includes("מי מעניין")) {
+    await addSubscribedYears(msg);
+    return;
+  }
+
+  if (
+    msg.body.includes("עדכן אותי") ||
+    sessionedAddSubscribersAlert[msg.from]
+  ) {
+    await createAlertSubscription(msg);
+    return;
+  }
+
+  if (msg.body.includes("אל תעדכן")) {
+    await removeAlertSubscription(msg);
+    return;
+  }
 
   if (msg.body.startsWith("!new") && (await isAdmin(msg))) {
     await addShabbas(msg);
@@ -38,10 +78,6 @@ export const messageHandler = async (msg: Message) => {
   }
 
   if (msg.body.includes("מי מגיע")) {
-    await client.sendMessage(
-      msg.from,
-      "*פיצ'ר חדש!!!* מעכשיו תוכל לערוך אילו מחזורים מעניינים אותך על ידי הפקודה מי מעניין "
-    );
     await getParticipants(msg);
     return;
   }
@@ -51,10 +87,6 @@ export const messageHandler = async (msg: Message) => {
     return;
   }
 
-  if (msg.body.includes("מי מעניין") || sessionedSubscribers[msg.from]) {
-    await addSubscribedYears(msg);
-    return;
-  }
   if (msg.body.includes("כולם מעניינים אותי")) {
     await resetSubscribedYears(msg);
     await client.sendMessage(msg.from, " די נו איזה חמוד אתה 🤓");
@@ -63,7 +95,7 @@ export const messageHandler = async (msg: Message) => {
   if (!(await auth(msg))) {
     return;
   }
-  
+
   if (msg.body.includes("מי מביא אלכוהול")) {
     await getAlcoholics(msg);
     return;

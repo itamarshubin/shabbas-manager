@@ -18,8 +18,9 @@ import {
 import { Message } from "whatsapp-web.js";
 import { client } from "../app";
 import { ALL_YESHIVA_YEARS } from "../constants/yeshiva-years";
+import { updateRelevantUsers } from "../constants/subscription";
 
-const fireStore = getFirestore();
+export const fireStore = getFirestore();
 
 const getShabbasDoc = async (): Promise<
   QueryDocumentSnapshot<DocumentData>
@@ -35,7 +36,7 @@ const getShabbasDoc = async (): Promise<
   return shabbasDocs.docs[0];
 };
 
-const getUserRef = async (msg: Message) => {
+export const getUserRef = async (msg: Message) => {
   const userRef = (
     await getDocs(
       query(collection(fireStore, "/users"), where("phone", "==", msg.from))
@@ -58,6 +59,7 @@ export const addUser = async (msg: Message) => {
     await updateDoc(shabbas.ref, { participants: arrayUnion(userRef.ref) });
     await client.sendMessage(msg.from, "נהדר! נשמח לראותך.");
   }
+  await updateRelevantUsers(userRef, client, true);
 };
 
 export const addAlcoholic = async (msg: Message) => {
@@ -151,6 +153,7 @@ export const removeUser = async (msg: Message) => {
     await updateDoc(shabbas.ref, { participants: arrayRemove(userRef.ref) });
   }
   await client.sendMessage(msg.from, "טוב נו... פעם הבאה.");
+  await updateRelevantUsers(userRef, client, false);
 };
 
 export const getParticipants = async (msg: Message) => {
@@ -326,3 +329,5 @@ export const resetSubscribedYears = async (
     msg.from
   );
 };
+
+const alertSubscribers = async (msg: Message) => {};
