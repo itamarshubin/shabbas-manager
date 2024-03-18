@@ -147,9 +147,9 @@ export const createAlertSubscription = async (msg: Message) => {
           match.data().year +
           "\n"
       );
-      response += "כתוב בבקשה את המספר של מי שאתה רוצה להוסיף";
     });
 
+    response += "כתוב בבקשה את המספר של מי שאתה רוצה להוסיף";
     client.sendMessage(msg.from, response);
     sessionedAddSubscribersAlert[msg.from].matches = matches;
     return;
