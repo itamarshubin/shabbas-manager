@@ -99,7 +99,8 @@ export const getAlcoholics = async (msg: Message) => {
   const userRef = await getUserRef(msg);
 
   const subscribedYears: string[] = userRef.get("subscribedYears");
-  if (!subscribedYears ||subscribedYears.length === 0) await resetSubscribedYears(msg, userRef);
+  if (!subscribedYears || subscribedYears.length === 0)
+    await resetSubscribedYears(msg, userRef);
   const alcoholic: DocumentReference<DocumentData>[] =
     shabbas.data().alcoholics;
   if (!alcoholic) {
@@ -157,9 +158,9 @@ export const getParticipants = async (msg: Message) => {
   const userRef = await getUserRef(msg);
 
   const subscribedYears: string[] = userRef.get("subscribedYears");
-  if (!subscribedYears ||subscribedYears.length === 0) await resetSubscribedYears(msg, userRef);
-  
-  
+  if (!subscribedYears || subscribedYears.length === 0)
+    await resetSubscribedYears(msg, userRef);
+
   const participant: DocumentReference<DocumentData>[] =
     shabbas.data().participants;
   if (!participant) {
@@ -272,10 +273,9 @@ export const calculateFood = async (msg: Message) => {
 
 export const setRabbi = async (msg: Message) => {
   const shabbas = await getShabbasDoc();
-
-  await updateDoc(shabbas.ref, {
-    rabbi: msg.body.substr(msg.body.indexOf(" ") + 1),
-  });
+  const rabbi = msg.body.substr(msg.body.indexOf(" ") + 1);
+  await updateDoc(shabbas.ref, { rabbi });
+  client.sendMessage(msg.from, `${rabbi} הוגדר`);
 };
 
 export const sessionedSubscribers: Record<string, boolean> = {};
