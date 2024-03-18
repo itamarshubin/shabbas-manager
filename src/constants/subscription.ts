@@ -42,7 +42,7 @@ export const sessionedAddSubscribersAlert: Record<
 > = {};
 export const sessionedRemoveSubscribersAlert: Record<
   string,
-  { followers: DocumentSnapshot<User>[] }
+  { followers: DocumentSnapshot<DocumentData>[] }
 > = {};
 
 //refetch users twice a day and save it in the cache.
@@ -97,8 +97,8 @@ export const removeAlertSubscription = async (msg: Message) => {
     );
   }
 
-  await updateDoc(userRef.ref, {
-    subscribedUsers: arrayRemove(userToRemove.ref),
+  await updateDoc(userToRemove.ref, {
+    subscribedUsers: arrayRemove(userRef.ref),
   });
   client.sendMessage(
     msg.from,
@@ -164,7 +164,7 @@ export const createAlertSubscription = async (msg: Message) => {
       "הזן מספר תקין או כתוב 'בטל' בשביל להפסיק את הפעולה"
     );
   }
-  await updateDoc(userRef.ref, { subscribedUsers: arrayUnion(userToAdd.ref) });
+  await updateDoc(userToAdd.ref, { subscribedUsers: arrayUnion(userRef.ref) });
   client.sendMessage(
     msg.from,
     `תקבל הודעה כש${userToAdd.data().name} יעדכן על מצב ההגעה שלו`
