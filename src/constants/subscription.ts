@@ -142,7 +142,29 @@ export const createAlertSubscription = async (msg: Message) => {
         "לא נמצא משתמש עם שם כזה, הזן שם אחר או 'בטל' כדי להפסיק את הפעולה"
       );
     }
-    let response = "";
+
+    if (matches.length === 1) {
+      const userRef = await getUserRef(msg);
+
+      const userToAdd = matches[0];
+      if (!userToAdd) {
+        return client.sendMessage(
+          msg.from,
+          "הזן מספר תקין או כתוב 'בטל' בשביל להפסיק את הפעולה"
+        );
+      }
+      await updateDoc(userToAdd.ref, {
+        subscribedUsers: arrayUnion(userRef.ref),
+      });
+      await updateDoc(userRef.ref, { subscribedTo: arrayUnion(userToAdd.ref) });
+      client.sendMessage(
+        msg.from,
+        `תקבל הודעה כש${userToAdd.data().name} יעדכן על מצב ההגעה שלו`
+      );
+      delete sessionedAddSubscribersAlert[msg.from];
+    }
+
+    let response = "נמצאו מספר תוצאות. \n";
     matches.forEach((match, index) => {
       response += String(
         index +
