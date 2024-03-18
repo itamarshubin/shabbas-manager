@@ -69,6 +69,10 @@ export const removeAlertSubscription = async (msg: Message) => {
 
     let response = "אלה האנשים שאתה תקבל עליהם עדכונים: \n";
 
+    if (!followers.length) {
+      return client.sendMessage(msg.from, "אתה לא רשום לאף אחד");
+    }
+
     followers.forEach((follower, index) => {
       response += index + 1 + ". " + String(follower.data()?.name) + "\n";
     });
