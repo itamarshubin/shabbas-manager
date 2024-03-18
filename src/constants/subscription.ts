@@ -147,12 +147,6 @@ export const createAlertSubscription = async (msg: Message) => {
       const userRef = await getUserRef(msg);
 
       const userToAdd = matches[0];
-      if (!userToAdd) {
-        return client.sendMessage(
-          msg.from,
-          "הזן מספר תקין או כתוב 'בטל' בשביל להפסיק את הפעולה"
-        );
-      }
       await updateDoc(userToAdd.ref, {
         subscribedUsers: arrayUnion(userRef.ref),
       });
@@ -162,6 +156,7 @@ export const createAlertSubscription = async (msg: Message) => {
         `תקבל הודעה כש${userToAdd.data().name} יעדכן על מצב ההגעה שלו`
       );
       delete sessionedAddSubscribersAlert[msg.from];
+      return;
     }
 
     let response = "נמצאו מספר תוצאות. \n";
