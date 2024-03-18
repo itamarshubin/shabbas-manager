@@ -136,7 +136,7 @@ export const createAlertSubscription = async (msg: Message) => {
     const matches = users.filter((user) =>
       user.data().name?.includes(msg.body)
     );
-    if (!matches) {
+    if (!matches.length) {
       return client.sendMessage(
         msg.from,
         "לא נמצא משתמש עם שם כזה, הזן שם אחר או 'בטל' כדי להפסיק את הפעולה"
