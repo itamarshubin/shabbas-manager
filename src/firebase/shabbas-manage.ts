@@ -49,8 +49,7 @@ export const addUser = async (msg: Message) => {
   const shabbas = await getShabbasDoc();
   const userRef = await getUserRef(msg);
   
-  console.log(shabbas.data())
-  if (shabbas.data().isClos) {
+  if (shabbas.data().isClose) {
     await client.sendMessage(msg.from, "הרישום דרך הבוט סגור, תדבר עם איתמר שובין (051-2665020).");
     return;
   }
