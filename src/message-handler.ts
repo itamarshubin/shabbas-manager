@@ -15,6 +15,8 @@ import {
   addAlcoholic,
   removeAlcoholic,
   getAlcoholics,
+  closeShabbas,
+  resumeShabbas,
 } from "./firebase/shabbas-manage";
 import { HELP_MESSAGE } from "./constants/help-message";
 import { sendSpecialMessages } from "./constants/special-response";
@@ -105,6 +107,16 @@ export const messageHandler = async (msg: Message) => {
 
   if (msg.body.includes("אני לא רוצה אלכוהול")) {
     await removeAlcoholic(msg);
+    return;
+  }
+
+  if (msg.body.startsWith("!stop") && (await isAdmin(msg))) {
+    await closeShabbas(msg);
+    return;
+  }
+  
+  if (msg.body.startsWith("!resume") && (await isAdmin(msg))) {
+    await resumeShabbas(msg);
     return;
   }
 
