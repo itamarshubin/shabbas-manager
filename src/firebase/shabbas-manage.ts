@@ -36,7 +36,9 @@ const getShabbasDoc = async (): Promise<
   return shabbasDocs.docs[0];
 };
 
-export const getUserRef = async (msg: Message) => {
+export const getUserRef = async (
+  msg: Message
+): Promise<QueryDocumentSnapshot<DocumentData, DocumentData> | undefined> => {
   const userRef = (
     await getDocs(
       query(collection(fireStore, "/users"), where("phone", "==", msg.from))
@@ -48,9 +50,13 @@ export const getUserRef = async (msg: Message) => {
 export const addUser = async (msg: Message) => {
   const shabbas = await getShabbasDoc();
   const userRef = await getUserRef(msg);
-  
+  if (!userRef) return client.sendMessage(msg.from, "אתה לא רשום במערכת");
+
   if (shabbas.data().isClose) {
-    await client.sendMessage(msg.from, "הרישום דרך הבוט סגור, תדבר עם איתמר שובין (051-2665020).");
+    await client.sendMessage(
+      msg.from,
+      "הרישום דרך הבוט סגור, תדבר עם איתמר שובין (051-2665020)."
+    );
     return;
   }
 
@@ -70,6 +76,7 @@ export const addUser = async (msg: Message) => {
 export const addAlcoholic = async (msg: Message) => {
   const shabbas = await getShabbasDoc();
   const userRef = await getUserRef(msg);
+  if (!userRef) return client.sendMessage(msg.from, "אתה לא רשום במערכת");
 
   if (
     shabbas
@@ -85,6 +92,7 @@ export const addAlcoholic = async (msg: Message) => {
 
 export const removeAlcoholic = async (msg: Message) => {
   const userRef = await getUserRef(msg);
+  if (!userRef) return client.sendMessage(msg.from, "אתה לא רשום במערכת");
 
   const shabbas = await getShabbasDoc();
 
@@ -104,6 +112,8 @@ export const removeAlcoholic = async (msg: Message) => {
 export const getAlcoholics = async (msg: Message) => {
   const shabbas = await getShabbasDoc();
   const userRef = await getUserRef(msg);
+  if (!userRef) return client.sendMessage(msg.from, "אתה לא רשום במערכת");
+
 
   const subscribedYears: string[] = userRef.get("subscribedYears");
   if (!subscribedYears || subscribedYears.length === 0)
@@ -147,6 +157,7 @@ export const getAlcoholics = async (msg: Message) => {
 
 export const removeUser = async (msg: Message) => {
   const userRef = await getUserRef(msg);
+  if (!userRef) return client.sendMessage(msg.from, "אתה לא רשום במערכת");
 
   const shabbas = await getShabbasDoc();
 
@@ -164,6 +175,7 @@ export const removeUser = async (msg: Message) => {
 export const getParticipants = async (msg: Message) => {
   const shabbas = await getShabbasDoc();
   const userRef = await getUserRef(msg);
+  if (!userRef) return client.sendMessage(msg.from, "אתה לא רשום במערכת");
 
   const subscribedYears: string[] = userRef.get("subscribedYears");
   if (!subscribedYears || subscribedYears.length === 0)
@@ -290,6 +302,8 @@ export const sessionedSubscribers: Record<string, boolean> = {};
 
 export const addSubscribedYears = async (msg: Message) => {
   const userRef = await getUserRef(msg);
+  if (!userRef) return client.sendMessage(msg.from, "אתה לא רשום במערכת");
+
   if (!sessionedSubscribers[msg.from]) {
     client.sendMessage(msg.from, "כתוב את המחזורים שמעניינים אותך");
     sessionedSubscribers[msg.from] = true;
@@ -335,7 +349,6 @@ export const resetSubscribedYears = async (
   );
 };
 
-
 export const closeShabbas = async (msg: Message) => {
   const shabbas = await getShabbasDoc();
   await updateDoc(shabbas.ref, { isClose: true });
@@ -348,5 +361,4 @@ export const resumeShabbas = async (msg: Message) => {
   client.sendMessage(msg.from, `הרישום ממשיך`);
 };
 
-
-const alertSubscribers = async (msg: Message) => { };
+const alertSubscribers = async (msg: Message) => {};
