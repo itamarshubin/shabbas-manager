@@ -26,7 +26,7 @@ export const updateRelevantUsers = async (
     userRef.get("subscribedUsers");
 
   subscribedUsers?.forEach(async (user) => {
-    const userData = (await getDocFromServer<User,DocumentData>(user)).data();
+    const userData = (await getDocFromServer<User>(user)).data();
     userData &&
       client.sendMessage(
         userData.phone,
@@ -63,7 +63,6 @@ export const removeAlertSubscription = async (msg: Message) => {
     const userRef = await getUserRef(msg);
     if (!userRef) return client.sendMessage(msg.from, "אתה לא רשום במערכת");
 
-
     const followersRef: DocumentReference<User>[] = userRef.data().subscribedTo;
     const followers = await Promise.all(
       followersRef.map((followerRef) => getDocFromServer(followerRef))
@@ -93,7 +92,6 @@ export const removeAlertSubscription = async (msg: Message) => {
 
   const userRef = await getUserRef(msg);
   if (!userRef) return client.sendMessage(msg.from, "אתה לא רשום במערכת");
-
 
   const userToRemove =
     sessionedRemoveSubscribersAlert[msg.from].followers[Number(msg.body) - 1];
@@ -151,7 +149,6 @@ export const createAlertSubscription = async (msg: Message) => {
       const userRef = await getUserRef(msg);
       if (!userRef) return client.sendMessage(msg.from, "אתה לא רשום במערכת");
 
-
       const userToAdd = matches[0];
       await updateDoc(userToAdd.ref, {
         subscribedUsers: arrayUnion(userRef.ref),
@@ -186,7 +183,6 @@ export const createAlertSubscription = async (msg: Message) => {
 
   const userRef = await getUserRef(msg);
   if (!userRef) return client.sendMessage(msg.from, "אתה לא רשום במערכת");
-
 
   const userToAdd =
     sessionedAddSubscribersAlert[msg.from].matches[Number(msg.body) - 1];
