@@ -38,7 +38,7 @@ const getShabbasDoc = async (): Promise<
 
 export const getUserRef = async (
   msg: Message
-): Promise<QueryDocumentSnapshot<DocumentData, DocumentData> | undefined> => {
+): Promise<QueryDocumentSnapshot | undefined> => {
   const userRef = (
     await getDocs(
       query(collection(fireStore, "/users"), where("phone", "==", msg.from))
@@ -113,7 +113,6 @@ export const getAlcoholics = async (msg: Message) => {
   const shabbas = await getShabbasDoc();
   const userRef = await getUserRef(msg);
   if (!userRef) return client.sendMessage(msg.from, "אתה לא רשום במערכת");
-
 
   const subscribedYears: string[] = userRef.get("subscribedYears");
   if (!subscribedYears || subscribedYears.length === 0)
