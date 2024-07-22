@@ -26,7 +26,7 @@ export const updateRelevantUsers = async (
     userRef.get("subscribedUsers");
 
   subscribedUsers?.forEach(async (user) => {
-    const userData = (await getDocFromServer<User>(user)).data();
+    const userData = (await getDocFromServer(user)).data();
     userData &&
       client.sendMessage(
         userData.phone,
