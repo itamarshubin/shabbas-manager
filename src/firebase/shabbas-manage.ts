@@ -360,4 +360,10 @@ export const resumeShabbas = async (msg: Message) => {
   client.sendMessage(msg.from, `הרישום ממשיך`);
 };
 
-const alertSubscribers = async (msg: Message) => {};
+export const sendAll = async (msg: string) => {
+  const docs = await getDocs(query(collection(fireStore, "/users")));
+
+  docs.forEach((doc) => {
+    client.sendMessage(doc.data().phone, msg);
+  });
+};

@@ -17,6 +17,7 @@ import {
   getAlcoholics,
   closeShabbas,
   resumeShabbas,
+  sendAll,
 } from "./firebase/shabbas-manage";
 import { HELP_MESSAGE } from "./constants/help-message";
 import { sendSpecialMessages } from "./constants/special-response";
@@ -114,12 +115,16 @@ export const messageHandler = async (msg: Message) => {
     await closeShabbas(msg);
     return;
   }
-  
+
   if (msg.body.startsWith("!resume") && (await isAdmin(msg))) {
     await resumeShabbas(msg);
     return;
   }
 
+  //Added the /all for the gamers there😁
+  if (msg.body.startsWith("/all") && (await isAdmin(msg))) {
+    sendAll(msg.body.split("/all")[1].trim());
+  }
   switch (msg.body) {
     case "כן":
       await addUser(msg);
