@@ -362,8 +362,10 @@ export const resumeShabbas = async (msg: Message) => {
 
 export const sendAll = async (msg: string) => {
   const docs = await getDocs(query(collection(fireStore, "/users")));
-
+  const promises: Promise<Message>[] = [];
   docs.forEach((doc) => {
-    client.sendMessage(doc.data().phone, msg);
+    doc.data().phone &&
+      promises.push(client.sendMessage(doc.data().phone, msg));
   });
+  await Promise.all(promises);
 };
