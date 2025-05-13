@@ -1,6 +1,6 @@
 ﻿# whatsapp-shabbat
 
-this code looks like shit, so feel free to pr me
+I know this code isn't looking great, so feel free to pr me 
 
 how to use:
 
