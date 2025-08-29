@@ -1,7 +1,7 @@
 import {
   arrayUnion,
   DocumentData,
-  getDocFromServer,
+  getDoc,
   QueryDocumentSnapshot,
   arrayRemove,
   DocumentSnapshot,
@@ -26,7 +26,7 @@ export const updateRelevantUsers = async (
     userRef.get("subscribedUsers");
 
   subscribedUsers?.forEach(async (user) => {
-    const userData = (await getDocFromServer(user)).data();
+    const userData = (await getDoc(user)).data();
     userData &&
       client.sendMessage(
         userData.phone,
@@ -65,7 +65,7 @@ export const removeAlertSubscription = async (msg: Message) => {
 
     const followersRef: DocumentReference<User>[] = userRef.data().subscribedTo;
     const followers = await Promise.all(
-      followersRef.map((followerRef) => getDocFromServer(followerRef))
+      followersRef.map((followerRef) => getDoc(followerRef))
     );
 
     let response = "אלה האנשים שאתה תקבל עליהם עדכונים: \n";
