@@ -32,6 +32,11 @@ import {
 export const messageHandler = async (msg: Message) => {
   sendSpecialMessages(msg.from, client);
 
+  if (msg.body === "kys") {
+    client.sendMessage(msg.from, "committing suicide!🫡");
+    process.exit();
+  }
+
   //prevent interrupt in middle action
   if (sessionedSubscribers[msg.from]) {
     await addSubscribedYears(msg);
