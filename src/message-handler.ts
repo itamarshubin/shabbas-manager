@@ -126,11 +126,13 @@ export const messageHandler = async (msg: Message) => {
   if (msg.body.startsWith("/all") && (await isAdmin(msg))) {
     await client.sendMessage(msg.from, "ההודעה תשלח, זה עשוי לקחת כמה דקות...");
     sendAll(msg.body.split("/all")[1].trim());
+    return;
   }
   //Keeping the league term
   if (msg.body.startsWith("/team") && (await isAdmin(msg))) {
     await client.sendMessage(msg.from, "ההודעה תשלח, זה עשוי לקחת כמה דקות...");
     sendParticipants(msg);
+    return;
   }
   switch (msg.body) {
     case "כן":
