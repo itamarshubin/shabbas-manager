@@ -6,7 +6,7 @@ import {
   arrayRemove,
   arrayUnion,
   collection,
-  getDocFromServer,
+  getDoc,
   getDocs,
   getFirestore,
   limit,
@@ -124,9 +124,7 @@ export const getAlcoholics = async (msg: Message) => {
     return;
   }
   const alcoholicsData = await Promise.all(
-    alcoholic.map(async (alcoholicRef) =>
-      (await getDocFromServer(alcoholicRef)).data()
-    )
+    alcoholic.map(async (alcoholicRef) => (await getDoc(alcoholicRef)).data())
   );
 
   const help: Record<string, any[]> = {};
@@ -180,15 +178,15 @@ export const getParticipants = async (msg: Message) => {
   if (!subscribedYears || subscribedYears.length === 0)
     await resetSubscribedYears(msg, userRef);
 
-  const participant: DocumentReference<DocumentData>[] =
+  const participants: DocumentReference<DocumentData>[] =
     shabbas.data().participants;
-  if (!participant) {
+  if (!participants) {
     client.sendMessage(msg.from, "אף אחד עוד לא נרשם לשבת");
     return;
   }
   const participantsData = await Promise.all(
-    participant.map(async (participantRef) =>
-      (await getDocFromServer(participantRef)).data()
+    participants.map(async (participantRef) =>
+      (await getDoc(participantRef)).data()
     )
   );
 
@@ -250,15 +248,15 @@ export const whoIsTheRabbi = async (msg: Message) => {
 export const calculateFood = async (msg: Message) => {
   const shabbas = await getShabbasDoc();
 
-  const participant: DocumentReference<DocumentData>[] =
+  const participants: DocumentReference<DocumentData>[] =
     shabbas.data().participants;
-  if (!participant) {
+  if (!participants) {
     client.sendMessage(msg.from, "אף אחד עוד לא נרשם לשבת");
     return;
   }
   const participantsData = await Promise.all(
-    participant.map(async (participantRef) =>
-      (await getDocFromServer(participantRef)).data()
+    participants.map(async (participantRef) =>
+      (await getDoc(participantRef)).data()
     )
   );
 
@@ -368,4 +366,29 @@ export const sendAll = async (msg: string) => {
       promises.push(client.sendMessage(doc.data().phone, msg));
   });
   await Promise.all(promises);
+};
+
+export const sendParticipants = async (
+  message: Message,
+  actionCode = "/team"
+) => {
+  const shabbas = await getShabbasDoc();
+  const participants: DocumentReference<DocumentData>[] =
+    shabbas.data().participants;
+  if (!participants) {
+    return client.sendMessage(message.from, "אף אחד עוד לא נרשם לשבת");
+  }
+  const participantsData = await Promise.all(
+    participants.map(async (participantRef) =>
+      (await getDoc(participantRef)).data()
+    )
+  );
+  await Promise.all(
+    participantsData!.map((participantData) =>
+      client.sendMessage(
+        participantData!.phone,
+        message.body.split(actionCode)[1].trim()
+      )
+    )
+  );
 };

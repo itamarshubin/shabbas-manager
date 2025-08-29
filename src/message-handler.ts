@@ -1,24 +1,5 @@
 import { Message } from "whatsapp-web.js";
-import { auth, isAdmin } from "./firebase/authantication";
 import { client } from "./app";
-import {
-  addShabbas,
-  addUser,
-  calculateFood,
-  getParticipants,
-  removeUser,
-  setRabbi,
-  whoIsTheRabbi,
-  addSubscribedYears,
-  resetSubscribedYears,
-  sessionedSubscribers,
-  addAlcoholic,
-  removeAlcoholic,
-  getAlcoholics,
-  closeShabbas,
-  resumeShabbas,
-  sendAll,
-} from "./firebase/shabbas-manage";
 import { HELP_MESSAGE } from "./constants/help-message";
 import { sendSpecialMessages } from "./constants/special-response";
 import {
@@ -27,6 +8,26 @@ import {
   sessionedAddSubscribersAlert,
   sessionedRemoveSubscribersAlert,
 } from "./constants/subscription";
+import { auth, isAdmin } from "./firebase/authantication";
+import {
+  addAlcoholic,
+  addShabbas,
+  addSubscribedYears,
+  addUser,
+  calculateFood,
+  closeShabbas,
+  getAlcoholics,
+  getParticipants,
+  removeAlcoholic,
+  removeUser,
+  resetSubscribedYears,
+  resumeShabbas,
+  sendAll,
+  sendParticipants,
+  sessionedSubscribers,
+  setRabbi,
+  whoIsTheRabbi,
+} from "./firebase/shabbas-manage";
 
 export const messageHandler = async (msg: Message) => {
   sendSpecialMessages(msg.from, client);
@@ -123,7 +124,13 @@ export const messageHandler = async (msg: Message) => {
 
   //Added the /all for the gamers there😁
   if (msg.body.startsWith("/all") && (await isAdmin(msg))) {
+    await client.sendMessage(msg.from, "ההודעה תשלח, זה עשוי לקחת כמה דקות...");
     sendAll(msg.body.split("/all")[1].trim());
+  }
+  //Keeping the league term
+  if (msg.body.startsWith("/team") && (await isAdmin(msg))) {
+    await client.sendMessage(msg.from, "ההודעה תשלח, זה עשוי לקחת כמה דקות...");
+    sendParticipants(msg);
   }
   switch (msg.body) {
     case "כן":
